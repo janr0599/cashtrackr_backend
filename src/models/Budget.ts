@@ -13,12 +13,12 @@ export class Budget extends Model<Budget> {
     @Column({
         type: DataType.STRING(100),
     })
-    name: string;
+    declare name: string;
 
     @Column({
         type: DataType.FLOAT,
     })
-    amount: number;
+    declare amount: number;
 }
 
 export default Budget;

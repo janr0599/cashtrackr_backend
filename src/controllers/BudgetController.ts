@@ -1,11 +1,15 @@
 import { Request, Response } from "express";
+import Budget from "../models/Budget";
 
 export class BudgetController {
     static createBudget = async (req: Request, res: Response) => {
         try {
-            res.status(200).json({ message: "Budget created" });
+            const budget = new Budget(req.body);
+
+            await budget.save();
+            res.status(201).json({ message: "Budget created sucessfully" });
         } catch (error) {
-            res.status(500).json({ message: "An error has ocurred" });
+            res.status(500).json({ error: "An error has ocurred" });
         }
     };
 
@@ -13,7 +17,7 @@ export class BudgetController {
         try {
             res.status(200).json({ message: "Budget API is working" });
         } catch (error) {
-            res.status(500).json({ message: "An error has ocurred" });
+            res.status(500).json({ error: "An error has ocurred" });
         }
     };
 
@@ -22,7 +26,7 @@ export class BudgetController {
         try {
             res.status(200).json({ message: `Got budget with ID ${id}` });
         } catch (error) {
-            res.status(500).json({ message: "An error has ocurred" });
+            res.status(500).json({ error: "An error has ocurred" });
         }
     };
 
@@ -31,7 +35,7 @@ export class BudgetController {
         try {
             res.status(200).json({ message: `Budget with ID ${id} updated` });
         } catch (error) {
-            res.status(500).json({ message: "An error has ocurred" });
+            res.status(500).json({ error: "An error has ocurred" });
         }
     };
 
@@ -41,7 +45,7 @@ export class BudgetController {
         try {
             res.status(200).json({ message: `Budget with ID ${id} deleted` });
         } catch (error) {
-            res.status(500).json({ message: "An error has ocurred" });
+            res.status(500).json({ error: "An error has ocurred" });
         }
     };
 }
