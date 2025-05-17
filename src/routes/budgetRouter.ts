@@ -1,12 +1,30 @@
 import { Router } from "express";
 import { BudgetController } from "../controllers/BudgetController";
+import { body } from "express-validator";
+import { handleInputErrors } from "../middleware/validation";
 
 const router = Router();
 
-router.post("/", BudgetController.createBudget);
+router.post(
+    "/",
+    body("name").notEmpty().withMessage("Budget name cannot be empty"),
+    body("amount")
+        .notEmpty()
+        .withMessage("Budget amount cannot be empty")
+        .isNumeric()
+        .withMessage("Budget amount must be a number")
+        .custom((value) => value > 0)
+        .withMessage("Budget amount must be greater than 0"),
+    handleInputErrors,
+    BudgetController.createBudget
+);
+
 router.get("/", BudgetController.getBudgets);
+
 router.get("/:id", BudgetController.getBudgetById);
+
 router.put("/:id", BudgetController.updateBudget);
+
 router.delete("/:id", BudgetController.deleteBudget);
 
 export default router;
