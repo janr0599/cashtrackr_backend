@@ -15,7 +15,12 @@ export class BudgetController {
 
     static getBudgets = async (req: Request, res: Response) => {
         try {
-            res.status(200).json({ message: "Budget API is working" });
+            const budgets = await Budget.findAll({
+                order: [["createdAt", "DESC"]],
+                // TODO: Filter by authenticated user
+                // where: { userId: req.user.id },
+            });
+            res.status(200).json({ budgets });
         } catch (error) {
             res.status(500).json({ error: "An error has ocurred" });
         }
@@ -23,8 +28,14 @@ export class BudgetController {
 
     static getBudgetById = async (req: Request, res: Response) => {
         const { id } = req.params;
+
         try {
-            res.status(200).json({ message: `Got budget with ID ${id}` });
+            const budget = await Budget.findByPk(id);
+            if (!budget) {
+                res.status(404).json({ error: "Budget not found" });
+                return;
+            }
+            res.status(200).json({ budget });
         } catch (error) {
             res.status(500).json({ error: "An error has ocurred" });
         }
@@ -32,6 +43,7 @@ export class BudgetController {
 
     static updateBudget = async (req: Request, res: Response) => {
         const { id } = req.params;
+
         try {
             res.status(200).json({ message: `Budget with ID ${id} updated` });
         } catch (error) {

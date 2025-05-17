@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { BudgetController } from "../controllers/BudgetController";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { handleInputErrors } from "../middleware/validation";
 
 const router = Router();
@@ -21,7 +21,16 @@ router.post(
 
 router.get("/", BudgetController.getBudgets);
 
-router.get("/:id", BudgetController.getBudgetById);
+router.get(
+    "/:id",
+    param("id")
+        .isInt()
+        .withMessage("Invalid budget ID")
+        .custom((value) => value > 0)
+        .withMessage("Invalid budget ID"),
+    handleInputErrors,
+    BudgetController.getBudgetById
+);
 
 router.put("/:id", BudgetController.updateBudget);
 
