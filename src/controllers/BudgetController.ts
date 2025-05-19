@@ -45,7 +45,15 @@ export class BudgetController {
         const { id } = req.params;
 
         try {
-            res.status(200).json({ message: `Budget with ID ${id} updated` });
+            const budget = await Budget.findByPk(id);
+            if (!budget) {
+                res.status(404).json({ error: "Budget not found" });
+                return;
+            }
+
+            await budget.update(req.body);
+
+            res.status(200).json({ message: "Budget updated successfully" });
         } catch (error) {
             res.status(500).json({ error: "An error has ocurred" });
         }

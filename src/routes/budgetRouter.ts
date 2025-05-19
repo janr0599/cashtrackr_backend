@@ -32,7 +32,24 @@ router.get(
     BudgetController.getBudgetById
 );
 
-router.put("/:id", BudgetController.updateBudget);
+router.put(
+    "/:id",
+    param("id")
+        .isInt()
+        .withMessage("Invalid budget ID")
+        .custom((value) => value > 0)
+        .withMessage("Invalid budget ID"),
+    body("name").notEmpty().withMessage("Budget name cannot be empty"),
+    body("amount")
+        .notEmpty()
+        .withMessage("Budget amount cannot be empty")
+        .isNumeric()
+        .withMessage("Budget amount must be a number")
+        .custom((value) => value > 0)
+        .withMessage("Budget amount must be greater than 0"),
+    handleInputErrors,
+    BudgetController.updateBudget
+);
 
 router.delete("/:id", BudgetController.deleteBudget);
 
