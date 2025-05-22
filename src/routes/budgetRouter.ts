@@ -51,6 +51,15 @@ router.put(
     BudgetController.updateBudget
 );
 
-router.delete("/:id", BudgetController.deleteBudget);
+router.delete(
+    "/:id",
+    param("id")
+        .isInt()
+        .withMessage("Invalid budget ID")
+        .custom((value) => value > 0)
+        .withMessage("Invalid budget ID"),
+    handleInputErrors,
+    BudgetController.deleteBudget
+);
 
 export default router;
