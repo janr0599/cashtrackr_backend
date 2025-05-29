@@ -1,15 +1,8 @@
-import {
-    Table,
-    Column,
-    DataType,
-    HasMany,
-    BelongsTo,
-    ForeignKey,
-    Model,
-} from "sequelize-typescript";
+import { Table, Column, DataType, HasMany, Model } from "sequelize-typescript";
+import Expense from "./Expense";
 
 @Table({ tableName: "budgets" })
-export class Budget extends Model<Budget> {
+class Budget extends Model<Budget> {
     @Column({
         type: DataType.STRING(100),
     })
@@ -19,6 +12,12 @@ export class Budget extends Model<Budget> {
         type: DataType.FLOAT,
     })
     declare amount: number;
+
+    @HasMany(() => Expense, {
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+    })
+    declare expenses: Expense[];
 }
 
 export default Budget;
