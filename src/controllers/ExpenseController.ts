@@ -5,22 +5,11 @@ export class ExpenseController {
     static createExpense = async (req: Request, res: Response) => {
         try {
             const expense = new Expense(req.body);
+            // Ensure the expense is associated with the budget
+            expense.budgetId = req.budget.id;
 
             await expense.save();
             res.status(201).json({ message: "expense created sucessfully" });
-        } catch (error) {
-            res.status(500).json({ error: "An error has ocurred" });
-        }
-    };
-
-    static getExpenses = async (req: Request, res: Response) => {
-        try {
-            const expenses = await Expense.findAll({
-                order: [["createdAt", "DESC"]],
-                // TODO: Filter by authenticated user
-                // where: { userId: req.user.id },
-            });
-            res.status(200).json({ expenses });
         } catch (error) {
             res.status(500).json({ error: "An error has ocurred" });
         }
